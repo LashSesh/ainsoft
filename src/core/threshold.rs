@@ -156,10 +156,7 @@ impl AdaptiveThreshold {
         // Calculate statistics from history
         let mean = self.history.iter().sum::<f64>() / self.history.len() as f64;
         let variance = if self.history.len() > 1 {
-            self.history
-                .iter()
-                .map(|x| (x - mean).powi(2))
-                .sum::<f64>()
+            self.history.iter().map(|x| (x - mean).powi(2)).sum::<f64>()
                 / (self.history.len() - 1) as f64
         } else {
             0.0
@@ -170,8 +167,8 @@ impl AdaptiveThreshold {
         let target = mean + 0.5 * std_dev;
 
         // Smooth adaptation towards target
-        self.value = self.value * (1.0 - self.config.adaptation_rate)
-            + target * self.config.adaptation_rate;
+        self.value =
+            self.value * (1.0 - self.config.adaptation_rate) + target * self.config.adaptation_rate;
 
         // Clamp to bounds
         self.value = self.value.clamp(self.config.min, self.config.max);
@@ -200,11 +197,7 @@ impl AdaptiveThreshold {
             return 0.0;
         }
         let mean = self.mean();
-        let variance = self
-            .history
-            .iter()
-            .map(|x| (x - mean).powi(2))
-            .sum::<f64>()
+        let variance = self.history.iter().map(|x| (x - mean).powi(2)).sum::<f64>()
             / (self.history.len() - 1) as f64;
         variance.sqrt()
     }

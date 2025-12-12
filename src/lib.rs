@@ -17,6 +17,7 @@
 //! // Encode seed phrases to 5D geometry
 //! let engine = SeedDnaEngine::default();
 //! let geometry = engine.encode("example seed phrase");
+//! let geometry = geometry.as_slice().to_vec();
 //!
 //! // Build mesh from points
 //! let points = vec![geometry];
@@ -27,6 +28,7 @@ pub mod config;
 pub mod core;
 pub mod mesh;
 pub mod phantomload;
+pub mod pipeline;
 pub mod scan;
 pub mod web3;
 
@@ -35,6 +37,10 @@ pub use config::Config;
 pub use core::{Feedback, Oscillator, Threshold};
 pub use mesh::{MeshBuilder, MeshLayer, PointCloud};
 pub use phantomload::{GhostRpcManager, PhantomCell, PhantomCellManager};
+pub use pipeline::{
+    fixpunkt_from_config, orchestrator_from_config, FixpunktAttraktorEngine, FixpunktCandidate,
+    PipelineDocument, PipelineOrchestrator, PipelineRegistry,
+};
 pub use web3::{MutationEngine, PhosphorosKernel, SeedClusterEngine, SeedDnaEngine};
 
 /// Framework version

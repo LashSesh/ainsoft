@@ -28,7 +28,11 @@ pub struct GhostRpcNode {
 
 impl GhostRpcNode {
     /// Create a new ghost RPC node.
-    pub fn new(node_id: impl Into<String>, endpoint: impl Into<String>, seed: impl Into<String>) -> Self {
+    pub fn new(
+        node_id: impl Into<String>,
+        endpoint: impl Into<String>,
+        seed: impl Into<String>,
+    ) -> Self {
         Self {
             node_id: node_id.into(),
             endpoint: endpoint.into(),
@@ -53,8 +57,14 @@ impl GhostRpcNode {
         data.insert("endpoint".to_string(), serde_json::json!(self.endpoint));
         data.insert("seed".to_string(), serde_json::json!(self.seed));
         data.insert("active".to_string(), serde_json::json!(self.active));
-        data.insert("last_latency".to_string(), serde_json::json!(self.last_latency));
-        data.insert("requests_sent".to_string(), serde_json::json!(self.requests_sent));
+        data.insert(
+            "last_latency".to_string(),
+            serde_json::json!(self.last_latency),
+        );
+        data.insert(
+            "requests_sent".to_string(),
+            serde_json::json!(self.requests_sent),
+        );
         data
     }
 
@@ -274,7 +284,10 @@ impl GhostRpcManager {
 
         let mut result = HashMap::new();
         result.insert("wave".to_string(), serde_json::json!(wave.snapshot()));
-        result.insert("proxy".to_string(), serde_json::json!(self.proxy_manager.snapshot()));
+        result.insert(
+            "proxy".to_string(),
+            serde_json::json!(self.proxy_manager.snapshot()),
+        );
         result.insert("timestamp".to_string(), serde_json::json!(self.last_tick));
 
         Some(result)
@@ -291,8 +304,14 @@ impl GhostRpcManager {
                 .map(|w| serde_json::json!(w.snapshot()))
                 .unwrap_or(serde_json::Value::Null),
         );
-        result.insert("proxy".to_string(), serde_json::json!(self.proxy_manager.snapshot()));
-        result.insert("total_waves".to_string(), serde_json::json!(self.total_waves));
+        result.insert(
+            "proxy".to_string(),
+            serde_json::json!(self.proxy_manager.snapshot()),
+        );
+        result.insert(
+            "total_waves".to_string(),
+            serde_json::json!(self.total_waves),
+        );
         result
     }
 

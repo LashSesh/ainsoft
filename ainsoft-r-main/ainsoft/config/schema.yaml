@@ -1,0 +1,58 @@
+target: "127.0.0.1"
+port: 8080
+cycles: 3
+threshold: 0.7
+proxy:
+  enabled: false
+  host: null
+  port: null
+  username: null
+  password: null
+pipeline:
+  generators:
+    - "ainsoft.pipeline.scorpiosync_generators:fake_api_request_generator"
+  transformers:
+    - "ainsoft.pipeline.scorpiosync_generators:http_builder_transformer"
+    - "ainsoft.pipeline.scorpiosync_generators:steganography_transformer"
+  dispatchers:
+    - "ainsoft.pipeline.network_dispatcher:network_dispatcher"
+fixpunkt:
+  scorer: "ainsoft.pipeline.triton_scorer:triton_scorer"
+  impulses:
+    - "ainsoft.pipeline.scorpiosync_generators:http_builder_transformer"
+    - "ainsoft.pipeline.scorpiosync_generators:steganography_transformer"
+  threshold_evaluator: "ainsoft.pipeline.fixpunktattraktor:spectral_threshold_evaluator"
+  threshold_range: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  dtt:
+    wt:
+      omega: 0.6
+      phase: 0.0
+      mode: "scaled"
+    sw:
+      omega: 0.45
+      phase: 0.3
+      mode: "scaled"
+  resonance_module:
+    phases: [0.2, 0.4, 0.6]
+    dtt:
+      omega: 0.5
+      mode: "scaled"
+  emotion_module:
+    valence: 0.0
+    arousal: 0.0
+  consensus:
+    callable: "ainsoft.pipeline.fixpunktattraktor:mandorla_consensus"
+    kwargs:
+      threshold: 0.75
+phantomload:
+  default_mode: "sybil"
+  default_nodes: 16
+  heartbeat: 0.017
+  quadrupole_mode: true
+  idle_timeout: 1.2
+  mesh:
+    max_edges_per_cluster: 4
+    decay: 0.9
+  proxy:
+    mode: "round_robin"
+    proxy_list: []

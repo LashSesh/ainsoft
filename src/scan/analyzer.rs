@@ -173,11 +173,7 @@ impl SignalAnalyzer {
         }
 
         let mean = self.mean();
-        let variance: f64 = self
-            .values
-            .iter()
-            .map(|x| (x - mean).powi(2))
-            .sum::<f64>()
+        let variance: f64 = self.values.iter().map(|x| (x - mean).powi(2)).sum::<f64>()
             / (self.values.len() - 1) as f64;
 
         variance.sqrt()
@@ -185,16 +181,12 @@ impl SignalAnalyzer {
 
     /// Get minimum value.
     pub fn min(&self) -> f64 {
-        self.values
-            .iter()
-            .fold(f64::INFINITY, |a, &b| a.min(b))
+        self.values.iter().fold(f64::INFINITY, |a, &b| a.min(b))
     }
 
     /// Get maximum value.
     pub fn max(&self) -> f64 {
-        self.values
-            .iter()
-            .fold(f64::NEG_INFINITY, |a, &b| a.max(b))
+        self.values.iter().fold(f64::NEG_INFINITY, |a, &b| a.max(b))
     }
 
     /// Get recent anomalies.

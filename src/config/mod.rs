@@ -49,17 +49,15 @@ impl Config {
         let content = std::fs::read_to_string(path.as_ref())
             .map_err(|e| ConfigError::IoError(e.to_string()))?;
 
-        serde_yaml::from_str(&content)
-            .map_err(|e| ConfigError::ParseError(e.to_string()))
+        serde_yaml::from_str(&content).map_err(|e| ConfigError::ParseError(e.to_string()))
     }
 
     /// Save configuration to a YAML file.
     pub fn save(&self, path: impl AsRef<Path>) -> Result<(), ConfigError> {
-        let content = serde_yaml::to_string(self)
-            .map_err(|e| ConfigError::SerializeError(e.to_string()))?;
+        let content =
+            serde_yaml::to_string(self).map_err(|e| ConfigError::SerializeError(e.to_string()))?;
 
-        std::fs::write(path.as_ref(), content)
-            .map_err(|e| ConfigError::IoError(e.to_string()))
+        std::fs::write(path.as_ref(), content).map_err(|e| ConfigError::IoError(e.to_string()))
     }
 
     /// Load from JSON file.
@@ -67,8 +65,7 @@ impl Config {
         let content = std::fs::read_to_string(path.as_ref())
             .map_err(|e| ConfigError::IoError(e.to_string()))?;
 
-        serde_json::from_str(&content)
-            .map_err(|e| ConfigError::ParseError(e.to_string()))
+        serde_json::from_str(&content).map_err(|e| ConfigError::ParseError(e.to_string()))
     }
 
     /// Create default configuration file.

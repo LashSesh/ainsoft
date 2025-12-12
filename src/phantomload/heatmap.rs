@@ -60,8 +60,10 @@ impl PhantomHeatmap {
 
     /// Add activity at normalized coordinates (0.0 to 1.0).
     pub fn add_activity(&mut self, norm_x: f64, norm_y: f64, intensity: f64) {
-        let x = ((norm_x.clamp(0.0, 1.0) * (self.width - 1) as f64).round() as usize).min(self.width - 1);
-        let y = ((norm_y.clamp(0.0, 1.0) * (self.height - 1) as f64).round() as usize).min(self.height - 1);
+        let x = ((norm_x.clamp(0.0, 1.0) * (self.width - 1) as f64).round() as usize)
+            .min(self.width - 1);
+        let y = ((norm_y.clamp(0.0, 1.0) * (self.height - 1) as f64).round() as usize)
+            .min(self.height - 1);
 
         self.cells[y][x].intensity = (self.cells[y][x].intensity + intensity).min(1.0);
         self.cells[y][x].samples += 1;

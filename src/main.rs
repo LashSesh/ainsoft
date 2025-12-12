@@ -10,6 +10,9 @@ use tracing_subscriber::FmtSubscriber;
 use ainsoft::config::Config;
 use ainsoft::mesh::{MeshLayer, MeshLayerConfig, PointCloud};
 use ainsoft::phantomload::PhantomloadKernel;
+use ainsoft::pipeline::{
+    fixpunkt_from_config, orchestrator_from_config, PipelineDocument, PipelineRegistry,
+};
 use ainsoft::web3::PhosphorosKernel;
 
 /// AinSOFT - Universal Web3 Research Framework
@@ -60,6 +63,13 @@ enum Commands {
     Mesh {
         #[command(subcommand)]
         action: MeshAction,
+    },
+
+    /// Run resonance pipeline independent of Web3
+    Pipeline {
+        /// Pipeline/fixpunkt configuration file
+        #[arg(short, long, default_value = "pipeline.yaml")]
+        config: PathBuf,
     },
 
     /// Show framework information
@@ -227,7 +237,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
 
         Commands::Web3 { action } => match action {
-            Web3Action::Encode { phrases, mutate, format } => {
+            Web3Action::Encode {
+                phrases,
+                mutate,
+                format,
+            } => {
                 let mut kernel = PhosphorosKernel::default();
 
                 let mut results = Vec::new();
@@ -247,7 +261,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         println!(
                             "{},{},{},{},{},{},{:.4}",
                             r["phrase"].as_str().unwrap(),
-                            g[0], g[1], g[2], g[3], g[4],
+                            g[0],
+                            g[1],
+                            g[2],
+                            g[3],
+                            g[4],
                             r["norm"].as_f64().unwrap()
                         );
                     }
@@ -260,12 +278,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let content = std::fs::read_to_string(&input)?;
                 let phrases: Vec<&str> = content.lines().filter(|l| !l.is_empty()).collect();
 
-                let mut kernel = PhosphorosKernel::with_config(
-                    ainsoft::web3::kernel::KernelConfig {
+                let mut kernel =
+                    PhosphorosKernel::with_config(ainsoft::web3::kernel::KernelConfig {
                         n_clusters: clusters,
                         ..Default::default()
-                    }
-                );
+                    });
 
                 for phrase in &phrases {
                     kernel.add_seed_phrase(phrase, false);
@@ -274,7 +291,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let labels = kernel.cluster();
                 let score = kernel.silhouette_score();
 
-                println!("Clustered {} phrases into {} clusters", phrases.len(), clusters);
+                println!(
+                    "Clustered {} phrases into {} clusters",
+                    phrases.len(),
+                    clusters
+                );
                 println!("Silhouette score: {:.4}", score);
                 println!();
                 for (phrase, label) in phrases.iter().zip(labels.iter()) {
@@ -301,7 +322,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
 
         Commands::Phantom { action } => match action {
-            PhantomAction::Spawn { count, seed, mutate } => {
+            PhantomAction::Spawn {
+                count,
+                seed,
+                mutate,
+            } => {
                 let mut kernel = PhantomloadKernel::default();
                 let ids = kernel.spawn_cells(count, &seed, mutate);
 
@@ -311,8 +336,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
 
-            PhantomAction::Simulate { mode, ticks, endpoint } => {
-                info!("Starting phantom simulation: mode={}, ticks={}", mode, ticks);
+            PhantomAction::Simulate {
+                mode,
+                ticks,
+                endpoint,
+            } => {
+                info!(
+                    "Starting phantom simulation: mode={}, ticks={}",
+                    mode, ticks
+                );
                 let mut kernel = PhantomloadKernel::default();
 
                 // Spawn some cells first
@@ -397,7 +429,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("  Stable: {}", stable);
             }
 
-            MeshAction::Generate { points, dims, output } => {
+            MeshAction::Generate {
+                points,
+                dims,
+                output,
+            } => {
                 use rand::Rng;
                 let mut rng = rand::thread_rng();
 
@@ -414,6 +450,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("Exported to: {}", path.display());
             }
         },
+
+        Commands::Pipeline { config } => {
+            let registry = PipelineRegistry::with_defaults();
+            let doc = PipelineDocument::from_path(&config).unwrap_or_default();
+            let mut orchestrator = orchestrator_from_config(&doc.pipeline, &registry)?;
+            let engine = fixpunkt_from_config(&doc.fixpunkt, &registry, orchestrator, None)?;
+            let result = engine.run();
+
+            println!(
+                "Executed pipeline with {} candidates",
+                result.candidates.len()
+            );
+            println!("Accepted: {}", result.accepted.len());
+        }
     }
 
     Ok(())

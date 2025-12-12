@@ -51,7 +51,10 @@ impl Proxy {
     pub fn url(&self) -> String {
         match (&self.username, &self.password) {
             (Some(u), Some(p)) => {
-                format!("{}://{}:{}@{}:{}", self.protocol, u, p, self.host, self.port)
+                format!(
+                    "{}://{}:{}@{}:{}",
+                    self.protocol, u, p, self.host, self.port
+                )
             }
             _ => format!("{}://{}:{}", self.protocol, self.host, self.port),
         }
@@ -205,22 +208,24 @@ impl ProxyManager {
         let mut data = HashMap::new();
         data.insert("total".to_string(), serde_json::json!(self.count()));
         data.insert("active".to_string(), serde_json::json!(self.active_count()));
-        data.insert("strategy".to_string(), serde_json::json!(format!("{:?}", self.strategy)));
+        data.insert(
+            "strategy".to_string(),
+            serde_json::json!(format!("{:?}", self.strategy)),
+        );
         data.insert(
             "proxies".to_string(),
-            serde_json::json!(
-                self.proxies
-                    .iter()
-                    .map(|p| {
-                        serde_json::json!({
-                            "host": p.host,
-                            "port": p.port,
-                            "active": p.active,
-                            "success_rate": p.success_rate()
-                        })
+            serde_json::json!(self
+                .proxies
+                .iter()
+                .map(|p| {
+                    serde_json::json!({
+                        "host": p.host,
+                        "port": p.port,
+                        "active": p.active,
+                        "success_rate": p.success_rate()
                     })
-                    .collect::<Vec<_>>()
-            ),
+                })
+                .collect::<Vec<_>>()),
         );
         data
     }

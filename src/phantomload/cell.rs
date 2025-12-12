@@ -48,7 +48,11 @@ mod dvector_serde {
 
 impl PhantomCell {
     /// Create a new phantom cell.
-    pub fn new(cell_id: impl Into<String>, geometry: DVector<f64>, seed_phrase: impl Into<String>) -> Self {
+    pub fn new(
+        cell_id: impl Into<String>,
+        geometry: DVector<f64>,
+        seed_phrase: impl Into<String>,
+    ) -> Self {
         Self {
             cell_id: cell_id.into(),
             geometry,

@@ -30,10 +30,7 @@ impl PointCloud {
     /// Create from existing points.
     pub fn from_points(points: Vec<Vec<f64>>) -> Self {
         let dimensions = points.first().map(|p| p.len()).unwrap_or(5);
-        let converted: Vec<DVector<f64>> = points
-            .into_iter()
-            .map(DVector::from_vec)
-            .collect();
+        let converted: Vec<DVector<f64>> = points.into_iter().map(DVector::from_vec).collect();
 
         Self {
             points: converted,
@@ -90,10 +87,7 @@ impl PointCloud {
 
     /// Convert to 2D array representation.
     pub fn to_array(&self) -> Vec<Vec<f64>> {
-        self.points
-            .iter()
-            .map(|p| p.as_slice().to_vec())
-            .collect()
+        self.points.iter().map(|p| p.as_slice().to_vec()).collect()
     }
 
     /// Calculate centroid of all points.
@@ -240,11 +234,7 @@ mod tests {
 
     #[test]
     fn test_bounding_box() {
-        let cloud = PointCloud::from_points(vec![
-            vec![1.0, 2.0],
-            vec![3.0, 4.0],
-            vec![0.0, 5.0],
-        ]);
+        let cloud = PointCloud::from_points(vec![vec![1.0, 2.0], vec![3.0, 4.0], vec![0.0, 5.0]]);
 
         let (min, max) = cloud.bounding_box().unwrap();
         assert_eq!(min[0], 0.0);

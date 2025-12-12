@@ -35,9 +35,12 @@ impl OperatorRegistry {
         let mut registry = Self::new();
         registry.register("solve", Arc::new(|b| solve(b)));
         registry.register("gate", Arc::new(|b| gate(b, 0.5)));
-        registry.register("coagula", Arc::new(|b| {
-            coagula(b);
-        }));
+        registry.register(
+            "coagula",
+            Arc::new(|b| {
+                coagula(b);
+            }),
+        );
         registry
     }
 
@@ -98,7 +101,9 @@ pub fn solve(builder: &mut MeshBuilder) {
     let mut info = HashMap::new();
     info.insert("removed".to_string(), serde_json::json!(to_remove.len()));
     info.insert("median".to_string(), serde_json::json!(median));
-    builder.audit_log.push(super::builder::MeshAuditEvent::new("solve", info));
+    builder
+        .audit_log
+        .push(super::builder::MeshAuditEvent::new("solve", info));
 }
 
 /// Gate operator: keeps only edges above threshold.
@@ -117,7 +122,9 @@ pub fn gate(builder: &mut MeshBuilder, threshold: f64) {
     let mut info = HashMap::new();
     info.insert("removed".to_string(), serde_json::json!(to_remove.len()));
     info.insert("threshold".to_string(), serde_json::json!(threshold));
-    builder.audit_log.push(super::builder::MeshAuditEvent::new("gate", info));
+    builder
+        .audit_log
+        .push(super::builder::MeshAuditEvent::new("gate", info));
 }
 
 /// Coagula operator: merges highly resonant nodes into clusters.
@@ -155,8 +162,13 @@ pub fn coagula(builder: &mut MeshBuilder) -> HashMap<usize, usize> {
 
     let unique_labels: std::collections::HashSet<_> = labels.values().collect();
     let mut info = HashMap::new();
-    info.insert("clusters".to_string(), serde_json::json!(unique_labels.len()));
-    builder.audit_log.push(super::builder::MeshAuditEvent::new("coagula", info));
+    info.insert(
+        "clusters".to_string(),
+        serde_json::json!(unique_labels.len()),
+    );
+    builder
+        .audit_log
+        .push(super::builder::MeshAuditEvent::new("coagula", info));
 
     labels
 }
@@ -185,7 +197,9 @@ where
 
     let mut info = HashMap::new();
     info.insert("step".to_string(), serde_json::json!(step));
-    builder.audit_log.push(super::builder::MeshAuditEvent::new("expand", info));
+    builder
+        .audit_log
+        .push(super::builder::MeshAuditEvent::new("expand", info));
 }
 
 /// Gradient function pointing towards origin.
@@ -214,7 +228,9 @@ pub fn contract(builder: &mut MeshBuilder, factor: f64) {
 
     let mut info = HashMap::new();
     info.insert("factor".to_string(), serde_json::json!(factor));
-    builder.audit_log.push(super::builder::MeshAuditEvent::new("contract", info));
+    builder
+        .audit_log
+        .push(super::builder::MeshAuditEvent::new("contract", info));
 }
 
 #[cfg(test)]
@@ -244,10 +260,7 @@ mod tests {
 
     #[test]
     fn test_gate_operator() {
-        let cloud = PointCloud::from_points(vec![
-            vec![0.0, 0.0],
-            vec![1.0, 0.0],
-        ]);
+        let cloud = PointCloud::from_points(vec![vec![0.0, 0.0], vec![1.0, 0.0]]);
 
         let mut builder = MeshBuilder::new(cloud, MeshMode::Complete);
         builder.build();
@@ -259,11 +272,7 @@ mod tests {
 
     #[test]
     fn test_coagula_operator() {
-        let cloud = PointCloud::from_points(vec![
-            vec![0.0, 0.0],
-            vec![0.1, 0.0],
-            vec![10.0, 0.0],
-        ]);
+        let cloud = PointCloud::from_points(vec![vec![0.0, 0.0], vec![0.1, 0.0], vec![10.0, 0.0]]);
 
         let mut builder = MeshBuilder::new(cloud, MeshMode::Complete);
         builder.build();

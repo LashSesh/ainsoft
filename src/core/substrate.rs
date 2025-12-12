@@ -44,7 +44,8 @@ impl Substrate {
 
     /// Add a neighbor connection.
     pub fn connect(&mut self, neighbor_id: impl Into<String>, strength: f64) {
-        self.neighbors.insert(neighbor_id.into(), strength.clamp(0.0, 1.0));
+        self.neighbors
+            .insert(neighbor_id.into(), strength.clamp(0.0, 1.0));
     }
 
     /// Inject a signal into the substrate.

@@ -1,0 +1,30 @@
+{
+  "name": "mesh_0000",
+  "timestamp": 0,
+  "nodes": [
+    {
+      "id": "n0",
+      "position": [0, 0, 0],
+      "score": 0.5,
+      "cluster": 0,
+      "metadata": {"label": "Origin"}
+    },
+    {
+      "id": "n1",
+      "position": [1.5, 1.2, -0.5],
+      "score": 0.8,
+      "cluster": 1,
+      "metadata": {"label": "Resonance"}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "source": "n0",
+      "target": "n1",
+      "weight": 0.9,
+      "metadata": {"type": "base"}
+    }
+  ],
+  "metadata": {"info": "Sample mesh"}
+}
