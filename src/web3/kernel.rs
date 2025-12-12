@@ -85,8 +85,7 @@ impl Default for PhosphorosKernel {
 impl PhosphorosKernel {
     /// Create a kernel with custom configuration.
     pub fn with_config(config: KernelConfig) -> Self {
-        let bridge =
-            ScorpioBridge::new(std::time::Duration::from_secs_f64(config.tick_interval));
+        let bridge = ScorpioBridge::new(std::time::Duration::from_secs_f64(config.tick_interval));
         let dna_engine = SeedDnaEngine::default();
         let mutation_engine = MutationEngine::with_rate(config.mutation_rate);
         let cluster_engine = SeedClusterEngine::new(config.n_clusters);
@@ -180,11 +179,7 @@ impl PhosphorosKernel {
     /// Export current state to JSON.
     pub fn export_state(&self, filename: &str) -> std::io::Result<PathBuf> {
         let state = KernelState {
-            seeds: self
-                .seeds
-                .iter()
-                .map(|s| s.as_slice().to_vec())
-                .collect(),
+            seeds: self.seeds.iter().map(|s| s.as_slice().to_vec()).collect(),
             clusters: self.clusters.clone(),
             history: self.meta_memory.get_history(),
             supervisor: self.supervisor.snapshot(),
@@ -219,7 +214,8 @@ impl PhosphorosKernel {
         if self.seeds.is_empty() || self.clusters.is_empty() {
             return 0.0;
         }
-        self.cluster_engine.silhouette_score(&self.seeds, &self.clusters)
+        self.cluster_engine
+            .silhouette_score(&self.seeds, &self.clusters)
     }
 }
 

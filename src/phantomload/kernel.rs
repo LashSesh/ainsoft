@@ -77,8 +77,11 @@ impl Default for PhantomloadKernel {
 impl PhantomloadKernel {
     /// Create a kernel with custom configuration.
     pub fn with_config(config: PhantomloadConfig) -> Self {
-        let heatmap =
-            PhantomHeatmap::new(config.heatmap_width, config.heatmap_height, config.heatmap_decay);
+        let heatmap = PhantomHeatmap::new(
+            config.heatmap_width,
+            config.heatmap_height,
+            config.heatmap_decay,
+        );
         let supervisor = PhantomSupervisor::new(config.max_events);
         let export = match &config.export_path {
             Some(path) => ExportModule::new(path),
@@ -99,9 +102,9 @@ impl PhantomloadKernel {
     /// Add proxies to the RPC manager.
     pub fn add_proxies(&mut self, proxies: Vec<(String, u16, String)>) {
         for (host, port, protocol) in proxies {
-            self.rpc_manager.proxy_manager.add(
-                super::proxy::Proxy::new(host, port, protocol)
-            );
+            self.rpc_manager
+                .proxy_manager
+                .add(super::proxy::Proxy::new(host, port, protocol));
         }
     }
 
@@ -111,28 +114,18 @@ impl PhantomloadKernel {
         for id in &ids {
             self.supervisor.log_cell_spawn(id);
         }
-        self.supervisor.update_metric("cell_count", self.cell_manager.cell_count() as f64);
+        self.supervisor
+            .update_metric("cell_count", self.cell_manager.cell_count() as f64);
         ids
     }
 
     /// Start an RPC wave.
-    pub fn start_wave(
-        &mut self,
-        mode: &str,
-        pattern: &str,
-        endpoint: &str,
-    ) {
+    pub fn start_wave(&mut self, mode: &str, pattern: &str, endpoint: &str) {
         // Create nodes from cells
         let nodes: Vec<GhostRpcNode> = self
             .cell_manager
             .iter()
-            .map(|cell| {
-                GhostRpcNode::new(
-                    cell.cell_id.clone(),
-                    endpoint,
-                    cell.seed_phrase.clone(),
-                )
-            })
+            .map(|cell| GhostRpcNode::new(cell.cell_id.clone(), endpoint, cell.seed_phrase.clone()))
             .collect();
 
         let node_count = nodes.len();
@@ -160,18 +153,18 @@ impl PhantomloadKernel {
         for cell in self.cell_manager.iter() {
             let position = cell.position();
             let intensity = 0.1; // Base activity
-            self.heatmap.add_from_position(&position, intensity, self.config.position_scale);
+            self.heatmap
+                .add_from_position(&position, intensity, self.config.position_scale);
         }
 
         // Apply heatmap decay
         self.heatmap.step();
 
         // Update metrics
-        self.supervisor.update_metric("tick_count", self.tick_count as f64);
-        self.supervisor.update_metric(
-            "heatmap_intensity",
-            self.heatmap.total_intensity(),
-        );
+        self.supervisor
+            .update_metric("tick_count", self.tick_count as f64);
+        self.supervisor
+            .update_metric("heatmap_intensity", self.heatmap.total_intensity());
 
         rpc_result
     }
@@ -180,9 +173,18 @@ impl PhantomloadKernel {
     pub fn status(&self) -> HashMap<String, serde_json::Value> {
         let mut data = HashMap::new();
         data.insert("tick_count".to_string(), serde_json::json!(self.tick_count));
-        data.insert("cell_count".to_string(), serde_json::json!(self.cell_manager.cell_count()));
-        data.insert("rpc_status".to_string(), serde_json::json!(self.rpc_manager.status()));
-        data.insert("supervisor".to_string(), serde_json::json!(self.supervisor.snapshot()));
+        data.insert(
+            "cell_count".to_string(),
+            serde_json::json!(self.cell_manager.cell_count()),
+        );
+        data.insert(
+            "rpc_status".to_string(),
+            serde_json::json!(self.rpc_manager.status()),
+        );
+        data.insert(
+            "supervisor".to_string(),
+            serde_json::json!(self.supervisor.snapshot()),
+        );
         data.insert(
             "heatmap_intensity".to_string(),
             serde_json::json!(self.heatmap.total_intensity()),

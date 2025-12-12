@@ -231,11 +231,7 @@ mod tests {
 
     #[test]
     fn test_coherence_check() {
-        let cloud = PointCloud::from_points(vec![
-            vec![0.0, 0.0],
-            vec![1.0, 0.0],
-            vec![2.0, 0.0],
-        ]);
+        let cloud = PointCloud::from_points(vec![vec![0.0, 0.0], vec![1.0, 0.0], vec![2.0, 0.0]]);
 
         let mut builder = MeshBuilder::new(cloud, MeshMode::Complete);
         builder.build();
@@ -263,11 +259,7 @@ mod tests {
 
     #[test]
     fn test_node_degrees() {
-        let cloud = PointCloud::from_points(vec![
-            vec![0.0, 0.0],
-            vec![1.0, 0.0],
-            vec![2.0, 0.0],
-        ]);
+        let cloud = PointCloud::from_points(vec![vec![0.0, 0.0], vec![1.0, 0.0], vec![2.0, 0.0]]);
 
         let mut builder = MeshBuilder::new(cloud, MeshMode::Complete);
         builder.build();

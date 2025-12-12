@@ -102,9 +102,8 @@ impl PhantomSupervisor {
 
     /// Log cell spawn.
     pub fn log_cell_spawn(&mut self, cell_id: &str) {
-        let event =
-            SupervisorEvent::new(EventType::CellSpawn, format!("Cell {cell_id} spawned"))
-                .with_data("cell_id", serde_json::json!(cell_id));
+        let event = SupervisorEvent::new(EventType::CellSpawn, format!("Cell {cell_id} spawned"))
+            .with_data("cell_id", serde_json::json!(cell_id));
         self.log(event);
     }
 
@@ -160,7 +159,10 @@ impl PhantomSupervisor {
     /// Get a summary snapshot.
     pub fn snapshot(&self) -> HashMap<String, serde_json::Value> {
         let mut data = HashMap::new();
-        data.insert("event_count".to_string(), serde_json::json!(self.events.len()));
+        data.insert(
+            "event_count".to_string(),
+            serde_json::json!(self.events.len()),
+        );
         data.insert("metrics".to_string(), serde_json::json!(self.metrics));
         data.insert(
             "recent_events".to_string(),

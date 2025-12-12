@@ -28,6 +28,7 @@ dependencies = [
  "serde_yaml",
  "sha2",
  "tempfile",
+ "thiserror",
  "tokio",
  "tokio-test",
  "tower 0.4.13",

@@ -1,0 +1,24 @@
+phantomload:
+  default_mode: sybil
+  default_nodes: 64
+  heartbeat: 0.017
+  quadrupole_mode: true
+  mesh_export_format: json
+  idle_timeout: 1.2
+  proxy:
+    enabled: false
+    type: socks5
+    proxy_list: []
+  supervisor:
+    enable_gui: false
+    log_level: info
+    mesh_view: "traffic"
+    export_interval: 10
+  mesh:
+    max_edges_per_cluster: 4
+    decay: 0.92
+  phantom_nodes:
+    base_phrase: "phantom"
+    mutation_rate: 0.08
+  bridge:
+    autostart: true

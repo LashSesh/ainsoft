@@ -66,7 +66,11 @@ impl SeedDnaEngine {
 
     /// Create a 5D vector from seed values.
     pub fn seed_to_geometry(seed: &[u16]) -> DVector<f64> {
-        let mut values: Vec<f64> = seed.iter().take(GEOMETRY_DIMENSIONS).map(|&v| v as f64).collect();
+        let mut values: Vec<f64> = seed
+            .iter()
+            .take(GEOMETRY_DIMENSIONS)
+            .map(|&v| v as f64)
+            .collect();
 
         // Pad with zeros if needed
         while values.len() < GEOMETRY_DIMENSIONS {

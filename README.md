@@ -111,6 +111,10 @@ println!("Coherent: {}, Betti: {:?}", coherent, betti);
 - `ResponseObserver` - Response collection
 - `SignalAnalyzer` - Adaptive threshold analysis
 
+## Legacy Python reference
+
+The original Python-based resonance lab (including modules such as `ScorpioSync`, `Fixpunktattraktor`, and the early calibration routines) is archived under [`ainsoft-r-main`](ainsoft-r-main/). It can be used as a reference for pre-Web3 core behaviors alongside the current Rust implementation.
+
 ## Configuration
 
 Create `ainsoft.yaml`:

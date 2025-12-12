@@ -129,11 +129,7 @@ impl MetaMemoryCore {
 
     /// Get aggregated statistics over history.
     pub fn aggregate(&self, key: &str) -> Option<AggregateStats> {
-        let values: Vec<f64> = self
-            .history
-            .iter()
-            .filter_map(|r| r.get(key))
-            .collect();
+        let values: Vec<f64> = self.history.iter().filter_map(|r| r.get(key)).collect();
 
         if values.is_empty() {
             return None;

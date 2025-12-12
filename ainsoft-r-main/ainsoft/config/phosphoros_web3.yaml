@@ -1,0 +1,61 @@
+phosphoros:
+  scorpio_bridge:
+    enabled: true
+    heartbeat_interval: 0.017
+    api_endpoint: "https://api.blockchain.net"
+    mimicry_level: 0.8
+    sync_mode: "clustered"
+  dna_engine:
+    enabled: true
+    dtt_enabled: true
+    trm_mode: "spiral"
+    mutation_rate: 0.12
+    max_mutation_depth: 7
+  seed_cluster:
+    n_clusters: 8
+    similarity_threshold: 0.78
+    distance_metric: "5d_cosine"
+  mutation_engine:
+    enabled: true
+    compression: true
+    validation_loops: 4
+  export:
+    export_path: "./exports/"
+    export_formats: ["csv", "json"]
+    auto_export: true
+  meshlayer:
+    enabled: true
+    triangulation: "delaunay"
+    k: 4
+    audit_logging: true
+  supervisor:
+    enabled: true
+    ui_enabled: false
+    reflex_params:
+      max_deviation: 0.06
+      convergence_window: 4
+  rpc_manager:
+    multichain: true
+    rpc_endpoints:
+      - "https://eth.rpc.ankr.com"
+      - "https://arbitrum.blockpi.network/v1/rpc/public"
+    chain_mapping:
+      mainnet: 1
+      arbitrum: 42161
+      polygon: 137
+  proxies:
+    enabled: false
+    proxy_list: []
+    socks5:
+      host: "127.0.0.1"
+      port: 1080
+      username: null
+      password: null
+  feedback:
+    heatmap_enabled: true
+    reverb_ring: true
+    realtime_visualization: false
+  meta_memory:
+    enabled: true
+    save_path: "./memories/"
+    max_history: 128

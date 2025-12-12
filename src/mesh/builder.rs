@@ -94,7 +94,10 @@ impl MeshBuilder {
         let n = self.pointcloud.len();
         if n <= 1 {
             self.edges.clear();
-            self.audit("build", serde_json::json!({"edges": 0, "reason": "insufficient_points"}));
+            self.audit(
+                "build",
+                serde_json::json!({"edges": 0, "reason": "insufficient_points"}),
+            );
             return;
         }
 
@@ -267,11 +270,7 @@ mod tests {
 
     #[test]
     fn test_radius_build() {
-        let cloud = PointCloud::from_points(vec![
-            vec![0.0, 0.0],
-            vec![0.5, 0.0],
-            vec![10.0, 0.0],
-        ]);
+        let cloud = PointCloud::from_points(vec![vec![0.0, 0.0], vec![0.5, 0.0], vec![10.0, 0.0]]);
 
         let mut builder = MeshBuilder::new(cloud, MeshMode::Radius).with_radius(1.0);
         builder.build();
@@ -283,10 +282,7 @@ mod tests {
 
     #[test]
     fn test_weight_edges() {
-        let cloud = PointCloud::from_points(vec![
-            vec![0.0, 0.0],
-            vec![1.0, 0.0],
-        ]);
+        let cloud = PointCloud::from_points(vec![vec![0.0, 0.0], vec![1.0, 0.0]]);
 
         let mut builder = MeshBuilder::new(cloud, MeshMode::Complete);
         builder.build();
